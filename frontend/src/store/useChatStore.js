@@ -77,8 +77,8 @@ export const useChatStore = create((set,get) => ({
         });
         try{
             const res= await axiosInstance.post(`/messages/send/${selectedUser._id}`,MessageData);
-            set({messages: get().messages.concat(res.data) });
-
+            // Replace the optimistic temp message with the server message
+            set({messages: get().messages.map(m => m._id === tempId ? res.data : m)});
 
         }catch(err){
             toast.error(err.response?.data?.message || "Failed to send message. Please try again.");
@@ -90,6 +90,9 @@ export const useChatStore = create((set,get) => ({
         const {selectedUser, isSoundEnabled} = get();
         if(!selectedUser) return;
         const socket = useAuthStore.getState().socket;
+        if(!socket) return;
+        // remove any existing listener to avoid duplicate handlers
+        socket.off("newMessage");
         socket.on("newMessage", (newMessage) => {
             const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
             if(!isMessageSentFromSelectedUser) return;
@@ -107,6 +110,7 @@ export const useChatStore = create((set,get) => ({
     },
     unSubscribeFromNewMessages: () => {
         const socket = useAuthStore.getState().socket;
+        if(!socket) return;
         socket.off("newMessage");
 
     },
