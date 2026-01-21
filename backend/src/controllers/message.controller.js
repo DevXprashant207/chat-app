@@ -34,6 +34,17 @@ export const sendMessage = async(req, res) => {
         const senderId = req.user.id;
         const {id:receiverId} = req.params;
         const {text,image} = req.body;
+        if(!text && !image){
+            return res.status(400).json({message: "Message text or image is required"});
+        }
+        // req.user.id is a string (Mongoose document `id` getter), so compare as strings
+        if(String(senderId) === String(receiverId)){
+            return res.status(400).json({message: "Cannot send message to yourself"});
+        }
+        const receiverExists = await User.findById(receiverId);
+        if(!receiverExists){
+            return res.status(404).json({message: "Receiver user not found"});
+        }
         let imageUrl = null;
         if(image){
             const uploadResponse = await cloudinary.uploader.upload(image);
@@ -48,6 +59,10 @@ export const sendMessage = async(req, res) => {
         });
         await newMessage.save();
         //todo:send message to receiver in real-time using socket.io
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
         res.status(201).json(newMessage);
 
     }catch(error){

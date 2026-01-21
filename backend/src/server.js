@@ -3,14 +3,17 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import path from "path";
+import cors from "cors"
 import {connectDB} from "./lib/db.js";
 import { connect } from "http2";
 import {ENV} from "./lib/env.js"
 import cookieParser from "cookie-parser";
+import {app, server} from "./lib/socket.js";
 dotenv.config();
-const app=express();
-app.use(express.json()); // req.body
+
+app.use(express.json({limit: "5mb"})); // req.body
 app.use(cookieParser());
+app.use(cors({origin:ENV.CLIENT_URL,credentials:true}));
 
 const PORT = ENV.PORT || 3000;
 const __dirname = path.resolve();
@@ -28,7 +31,7 @@ if(ENV.NODE_ENV==="production"){
     })
 }
 
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
     connectDB();
 })
