@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import {io} from "socket.io-client"
 // import { connect } from 'node:quic';
 const normalizeUser = (u) => ({ ...u, fullName: u.fullname ?? u.fullName ?? "" });
-const BASE_URL = import.meta.env.MODE==="development" ? 'https://chat-app-backend-fcb1.onrender.com/': "/";
+const BASE_URL = import.meta.env.MODE==="development" ? 'http://localhost:3000': "/";
 export const useAuthStore = create((set,get) => ({
     authUser: null,
     isCheckingAuth: true,

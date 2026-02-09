@@ -20,19 +20,19 @@ const __dirname = path.resolve();
 
 
 
-app.use("/root",(req,res)=>{
-    console.log("Root route hit");
-    return res.json({message:"Welcome to the Chat App API!"}); 
-});
+// app.use("/root",(req,res)=>{
+//     console.log("Root route hit");
+//     return res.json({message:"Welcome to the Chat App API!"}); 
+// });
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-// if(ENV.NODE_ENV==="production"){
-//     app.use(express.static(path.join(__dirname,"../frontend/dist")));
-//     app.get("*",(_,res)=>{
-//         res.sendFile(path.join(__dirname,"../frontend/dist/index.html"));
-//     })
-// }
+if(ENV.NODE_ENV==="production"){
+    app.use(express.static(path.join(__dirname,"../frontend/dist")));
+    app.get("*",(_,res)=>{
+        res.sendFile(path.join(__dirname,"../frontend/dist/index.html"));
+    })
+}
 
 server.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
