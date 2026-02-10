@@ -18,7 +18,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
-const CLIENT_ORIGIN = ENV.CLIENT_URL || 'https://chat-app-7-2kum.onrender.com';
+
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -31,7 +31,9 @@ app.use(cors({
   credentials: true
 }));
 
-
+app.use("/root", (req, res) => {
+   return res.json({ message: "Welcome to the Chat App API!" });
+})
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
