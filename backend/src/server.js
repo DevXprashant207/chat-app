@@ -20,19 +20,29 @@ app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
 const CLIENT_ORIGIN = ENV.CLIENT_URL || 'https://chat-app-7-2kum.onrender.com';
 
-app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    // allow non-browser tools (Postman, curl)
+    if (!origin) return callback(null, true);
+
+    // allow everything (dangerous in prod, fine for learning)
+    callback(null, true);
+  },
+  credentials: true
+}));
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 /* ✅ SERVE FRONTEND (ALWAYS) */
-app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+// app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
-app.get("*", (_, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/dist/index.html")
-  );
-});
+// app.get("*", (_, res) => {
+//   res.sendFile(
+//     path.join(__dirname, "../../frontend/dist/index.html")
+//   );
+// });
 
 const PORT = ENV.PORT || 3000;
 
