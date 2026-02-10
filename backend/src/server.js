@@ -20,10 +20,7 @@ app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
 const CLIENT_ORIGIN = ENV.CLIENT_URL || 'https://chat-app-7-2kum.onrender.com';
 
-app.use(cors({
-  origin: CLIENT_ORIGIN,
-  credentials: true
-}));
+app.use(cors());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
