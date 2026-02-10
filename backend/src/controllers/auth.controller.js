@@ -80,7 +80,12 @@ export const login = async (req, res) =>{
     }
 }
 export const logout = (_ , res) =>{
-    res.cookie("jwt","",{maxAge:0});
+    res.cookie("token","",{
+        httpOnly: true,
+        secure: ENV.NODE_ENV === 'production',
+        sameSite: ENV.NODE_ENV === 'production' ? 'none' : 'strict',
+        maxAge:0
+    });
     res.status(200).json({message:"Logged out successfully"});
 }
 export const updateProfile = async (req, res) => {

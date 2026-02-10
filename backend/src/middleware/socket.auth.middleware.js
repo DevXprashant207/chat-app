@@ -14,7 +14,7 @@ export async function socketAuthMiddleware(socket, next) {
                 const cookies = cookieHeader.split(';').map(c => c.trim());
                 for (const c of cookies) {
                     const [name, ...valParts] = c.split('=');
-                    if (name === 'jwt') {
+                    if (name === 'token') {
                         token = decodeURIComponent(valParts.join('='));
                         break;
                     }
