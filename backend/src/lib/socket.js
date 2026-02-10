@@ -6,7 +6,7 @@ import {socketAuthMiddleware} from '../middleware/socket.auth.middleware.js';
 
 const app = express();
 const server = http.createServer(app);
-const CLIENT_ORIGIN = ENV.CLIENT_URL || 'https://chat-app-7-2kum.onrender.com';
+const CLIENT_ORIGIN = ENV.CLIENT_URL || 'https://chat-app-0mjs.onrender.com/';
 const io = new Server(server,{
     cors: {
         origin: [CLIENT_ORIGIN],
@@ -14,7 +14,6 @@ const io = new Server(server,{
         credentials: true
     }
 });
-io.use(socketAuthMiddleware);
 export function getReceiverSocketId(userId){
     return userSocketMap[userId];
 }
